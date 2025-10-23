@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/product")
 class ProductRestController {
 
     @Autowired
@@ -23,21 +23,17 @@ class ProductRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findById(long id) {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()) {
-            return new ResponseEntity<>(product.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Product findById(@PathVariable(name = "id") long id) {
+        return productRepository.findById(id).get();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(long id, Product customer) {
+    public ResponseEntity<Product> updateProduct(@PathVariable(name = "id") long id, Product product) {
         Optional<Product> existingProduct = productRepository.findById(id);
         if (existingProduct.isPresent()) {
             Product updatedProduct = existingProduct.get();
-            updatedProduct.setCode(customer.getCode());
-            updatedProduct.setName(customer.getName());
+            updatedProduct.setCode(product.getCode());
+            updatedProduct.setName(product.getName());
             Product save = productRepository.save(updatedProduct);
             return new ResponseEntity<>(save, HttpStatus.OK);
         }
@@ -51,7 +47,7 @@ class ProductRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable(name = "id")  long id) {
         productRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -13,7 +13,6 @@ public class Customer {
     private long id;
     private String code;
     private String name;
-    private String firstName;
     private String lastName;
     private String iban;
     private String phone;
