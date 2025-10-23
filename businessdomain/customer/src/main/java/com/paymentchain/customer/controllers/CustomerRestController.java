@@ -10,6 +10,8 @@ import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customer")
@@ -49,6 +50,18 @@ class CustomerRestController {
                 conn.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS));
                 conn.addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS));
             });
+
+    //@Value("${custom.activeprofileName}")
+    //private String profile;
+
+    @Autowired
+    private Environment env;
+
+
+    @GetMapping("/check")
+    public String check() {
+        return "Customer Service is up and running in mode: " + env.getProperty("custom.activeprofileName");
+    }
 
     @GetMapping
     public Iterable<Customer> findAll() {
